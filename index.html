@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Bank Exam Quiz</title>
+
+<style>
+
+body{
+    font-family: Arial, sans-serif;
+    background:#f4f6f9;
+    margin:0;
+    padding:20px;
+}
+
+.container{
+    max-width:1000px;
+    margin:auto;
+}
+
+h1{
+    text-align:center;
+}
+
+/* ========================= */
+/* TIMER AREA */
+/* ========================= */
+
+#timer-container{
+    position:sticky;
+    top:0;
+    z-index:100;
+    background:#f4f6f9;
+    padding-bottom:10px;
+}
+
+#timer{
+    background:#222;
+    color:white;
+    padding:15px;
+    text-align:center;
+    font-size:22px;
+    border-radius:10px;
+    margin-bottom:10px;
+}
+
+.timer-buttons{
+    text-align:center;
+}
+
+#pauseBtn,
+#resumeBtn{
+    padding:10px 20px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    font-size:16px;
+    margin:5px;
+}
+
+#pauseBtn{
+    background:#ff9800;
+    color:white;
+}
+
+#resumeBtn{
+    background:#28a745;
+    color:white;
+}
+
+.question{
+    background:white;
+    padding:20px;
+    margin-bottom:20px;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.question h3{
+    margin-bottom:15px;
+}
+
+.option{
+    display:block;
+    padding:12px;
+    margin:10px 0;
+    border:1px solid #ccc;
+    border-radius:8px;
+    cursor:pointer;
+    transition:0.2s;
+}
+
+.option:hover{
+    background:#f0f0f0;
+}
+
+.selected{
+    background:#cfe2ff;
+    border:2px solid #0d6efd;
+}
+
+.mark-btn{
+    margin-top:10px;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#ff9800;
+    color:white;
+}
+
+.marked{
+    background:#ffcc80 !important;
+}
+
+.review-marked{
+    background:#e0e0e0 !important;
+    border:2px solid #9e9e9e;
+}
+
+.clear-btn{
+    margin-top:10px;
+    margin-left:10px;
+    padding:8px 15px;
+    border:none;
+    border-radius:8px;
+    cursor:pointer;
+    background:#dc3545;
+    color:white;
+}
+
+.submit-btn{
+    width:100%;
+    padding:15px;
+    font-size:20px;
+    border:none;
+    border-radius:10px;
+    background:#28a745;
+    color:white;
+    cursor:pointer;
+    margin-top:20px;
+}
+
+.result-box{
+    background:white;
+    padding:30px;
+    border-radius:12px;
+    text-align:center;
+    box-shadow:0 2px 10px rgba(0,0,0,0.1);
+}
+
+.review-btn{
+    padding:12px 20px;
+    margin-top:20px;
+    border:none;
+    border-radius:10px;
+    background:#007bff;
+    color:white;
+    font-size:18px;
+    cursor:pointer;
+}
+
+.review-question{
+    background:white;
+    padding:20px;
+    margin:20px 0;
+    border-radius:12px;
+    box-shadow:0 2px 8px rgba(0,0,0,0.1);
+}
+
+.correct{
+    color:green;
+    font-weight:bold;
+}
+
+.wrong{
+    color:red;
+    font-weight:bold;
+}
+
+.unanswered{
+    color:orange;
+    font-weight:bold;
+}
+
+.correct-answer{
+    background:#d4edda;
+    padding:10px;
+    border-radius:8px;
+    margin-top:10px;
+}
+
+.disabled-option{
+    pointer-events:none;
+    opacity:0.6;
+}
+
+.disabled-btn{
+    opacity:0.6;
+    cursor:not-allowed;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+<h1>Bank Exam MCQ Quiz</h1>
+
+<!-- ========================= -->
+<!-- TIMER -->
+<!-- ========================= -->
+
+<div id="timer-container">
+
+    <div id="timer">
+        Time Left: 20:00
+    </div>
+
+    <div class="timer-buttons">
+
+        <button id="pauseBtn" onclick="pauseTimer()">
+            Pause
+        </button>
+
+        <button id="resumeBtn" onclick="resumeTimer()" disabled>
+            Resume
+        </button>
+
+    </div>
+
+</div>
+
+<div id="quiz"></div>
+
+<button class="submit-btn" onclick="submitQuiz()">
+Submit Quiz
+</button>
+
+</div>
+
+<script>
+
+// ===============================
+// QUESTIONS AREA
+// ===============================
+
+const questions = [
+
+{q:"During the 16th Conference of the Central Council of Health and Family Welfare (CCHFW) chaired by Union Health Minister Jagat Prakash (JP) Nadda, a roadmap was unveiled to reduce India's Maternal Mortality Ratio (MMR) to below 70 per one lakh live births by 2030. Which initiative is directly associated with this target?", options:["Anaemia Mukt Bharat (AMB)","Surakshit Matritva Aashwasan (SUMAN)","Ayushman Bharat Digital Mission (ABDM)","Home-Based Care for Young Child (HBYC)"], answer:1},
+
+{q:"The 16th Conference of the Central Council of Health and Family Welfare (CCHFW) was organised at which of the following venues?", options:["Bharat Mandapam, New Delhi","Vigyan Bhawan, New Delhi","Sushma Swaraj Bhawan, New Delhi","National Media Centre, New Delhi"], answer:1},
+
+{q:"During the 16th CCHFW, the Samagra Shishu Bal Swasthya Karyakram (SSBSK) was highlighted for integrating two important child healthcare initiatives. Which of the following combinations is correct?", options:["HBNC and Janani Suraksha Yojana","HBYC and POSHAN Abhiyaan","HBNC and HBYC","AMB and SUMAN"], answer:2},
+
+{q:"The Home-Based Care for Young Child (HBYC) programme, now integrated under Samagra Shishu Bal Swasthya Karyakram (SSBSK), primarily provides home-based healthcare services for children up to:", options:["2 years","3 years","5 years","6 years"], answer:2},
+
+{q:"Which of the following schemes, highlighted during the 16th Conference of the Central Council of Health and Family Welfare (CCHFW), primarily focuses on reducing anaemia across vulnerable population groups?", options:["Ayushman Bharat Digital Mission","Anaemia Mukt Bharat (AMB)","Mission Indradhanush","Poshan Tracker"], answer:1},
+
+{q:"The Central Council of Health and Family Welfare (CCHFW), which recently held its 16th Conference, primarily serves as:", options:["India's apex regulatory body for medical colleges","Apex advisory body for Centre–State coordination in health and family welfare","National authority for disease surveillance","Regulatory body for pharmaceutical approvals"], answer:1},
+
+{q:"The Central Council of Health and Family Welfare (CCHFW) was constituted in:", options:["1986","1987","1988","1989"], answer:2},
+
+{q:"The Home-Based Newborn Care (HBNC) programme, recently integrated into SSBSK, was launched in:", options:["2010","2011","2012","2013"], answer:1},
+
+{q:"The Ministry of Statistics and Programme Implementation (MoSPI) released a series of publications on the Sustainable Development Goals (SDGs) during the 20th Statistics Day celebration. Which of the following was NOT among the publications released?", options:["SDGs – National Indicator Framework (NIF) Progress Report, 2026","Data Snapshot on SDGs – NIF Progress Report, 2026","India's SDG Vision 2047 Report","Transforming Lives: India's Achievements under the People Dimension of the SDGs"], answer:2},
+
+{q:"The National Indicator Framework (NIF), referred to in the publications released by MoSPI, is primarily intended to:", options:["Monitor India's progress towards the Sustainable Development Goals","Rank States on Ease of Doing Business","Measure industrial production across sectors","Assess the fiscal performance of States"], answer:0},
+
+{q:"The Sustainable Development Goals (SDGs), whose progress report was recently released by MoSPI, were adopted by the United Nations in:", options:["2013","2014","2015","2016"], answer:2},
+
+{q:"The Sustainable Development Goals (SDGs) comprise a total of:", options:["15 Goals","16 Goals","17 Goals","18 Goals"], answer:2},
+
+{q:"The recently launched Prime Minister Family Care Tracker (PM-FCT) pilot project aims to monitor beneficiaries from:", options:["Birth to 14 years","Pregnancy to 18 years","Birth to 21 years","Pregnancy to 15 years"], answer:1},
+
+{q:"Under the Prime Minister Family Care Tracker (PM-FCT), every child will receive a unique identity linked with either the Birth Registration Number (BRN) or which of the following?", options:["Aadhaar Number","Ayushman Bharat Health Account (ABHA)","National Population Register ID","PM Jan Arogya Card Number"], answer:1},
+
+{q:"The Prime Minister Family Care Tracker (PM-FCT) pilot project was launched in:", options:["Bhopal, Madhya Pradesh","Gandhinagar, Gujarat","Jaipur, Rajasthan","Chandigarh"], answer:1},
+
+{q:"The Birth Registration Number (BRN), referred to under the PM Family Care Tracker (PM-FCT) project, is issued under which system?", options:["National Population Register (NPR)","Civil Registration System (CRS)","Civil Identity Register (CIR)","Aadhaar Enrolment System"], answer:1},
+
+{q:"The Ayushman Bharat Health Account (ABHA), which can be linked with the PM Family Care Tracker, was introduced under which mission?", options:["National Digital Health Mission","Ayushman Bharat Digital Mission","Digital India Mission","National Health Mission"], answer:1},
+
+{q:"The Union Cabinet recently approved an additional investment commitment of Rs.30,000 crore in the National Investment and Infrastructure Fund (NIIF). Following this approval, the Government of India's total commitment to NIIF has increased to:", options:["Rs.45,000 crore","Rs.50,000 crore","Rs.60,000 crore","Rs.75,000 crore"], answer:2},
+
+{q:"The recently approved additional investment in the National Investment and Infrastructure Fund (NIIF) will primarily be utilised to:", options:["Establish a sovereign wealth fund","Launch a Startup Credit Guarantee Scheme","Set up NIIF's second infrastructure-focused fund","Capitalise Regional Rural Banks"], answer:2},
+
+{q:"The National Investment and Infrastructure Fund (NIIF), which recently received an additional investment commitment from the Union Cabinet, was established in:", options:["2013","2014","2015","2016"], answer:2},
+
+{q:"The National Investment and Infrastructure Fund (NIIF), which recently received an additional investment commitment from the Union Cabinet, has its headquarters located in:", options:["New Delhi","Mumbai","Hyderabad","Gandhinagar"], answer:1},
+
+{q:"In the National Investment and Infrastructure Fund (NIIF), the Government of India participates primarily in which capacity?", options:["Majority shareholder","Anchor investor","Strategic lender","Principal borrower"], answer:1},
+
+{q:"The Office of the Principal Scientific Adviser (OPSA) to the Government of India recently launched the Technology Readiness Level (TRL) Compass platform. The platform has been introduced primarily to:", options:["Standardise the Technology Readiness Level (TRL) assessment across various sectors","Monitor cybercrime incidents across India","Provide funding to technology start-ups","Evaluate the performance of government laboratories"], answer:0},
+
+{q:"The Office of the Principal Scientific Adviser (OPSA) signed a Memorandum of Understanding (MoU) with which organisation to facilitate collaboration on technology readiness assessments and capability mapping?", options:["National Association of Software and Service Companies (NASSCOM)","Data Security Council of India (DSCI)","Centre for Development of Advanced Computing (C-DAC)","National Informatics Centre (NIC)"], answer:1},
+
+{q:"The Memorandum of Understanding (MoU) on Technology Readiness Level (TRL) assessments was signed on behalf of the Data Security Council of India (DSCI) by:", options:["Ajay Kumar Sood","Vinayak Godse","Rajesh Nambiar","Debjani Ghosh"], answer:1},
+
+{q:"Who currently serves as the Principal Scientific Adviser (PSA) to the Government of India and chaired the launch of the Technology Readiness Level (TRL) Compass platform?", options:["Ajay Kumar Sood","M. Ravichandran","Rajesh Gokhale","V. Ramgopal Rao"], answer:0},
+
+{q:"The Office of the Principal Scientific Adviser (OPSA) to the Government of India was established in:", options:["1997","1998","1999","2000"], answer:2},
+
+{q:"The headquarters of the Office of the Principal Scientific Adviser (OPSA) is located in:", options:["Bengaluru","New Delhi","Hyderabad","Pune"], answer:1},
+
+{q:"The Data Security Council of India (DSCI), which recently partnered with OPSA, functions as an initiative of which parent organisation?", options:["Confederation of Indian Industry (CII)","Federation of Indian Chambers of Commerce and Industry (FICCI)","National Association of Software and Service Companies (NASSCOM)","Associated Chambers of Commerce and Industry of India (ASSOCHAM)"], answer:2},
+
+{q:"The Data Security Council of India (DSCI) was established in:", options:["2006","2007","2008","2009"], answer:2},
+
+{q:"The Ministry of Corporate Affairs (MCA) recently signed a Memorandum of Understanding (MoU) with the Indian Institute of Technology (IIT) Madras to launch which initiative for supporting Micro, Small and Medium Enterprises (MSMEs)?", options:["Corporate Mitra Scheme","Startup India Fellowship","MSME Digital Connect","Corporate Catalyst Programme"], answer:0},
+
+{q:"The Corporate Mitra Scheme launched by the Ministry of Corporate Affairs (MCA) primarily aims to:", options:["Train Chartered Accountants for public sector banks","Create a pool of trained Corporate Mitras to support MSMEs","Provide equity funding to start-ups","Develop technology incubators in engineering colleges"], answer:1},
+
+{q:"Under the Corporate Mitra Scheme, candidates completing both academic and practical training will receive:", options:["Startup India Fellowship","Corporate Mitra Certification","National MSME Advisor Licence","Professional Compliance Certificate"], answer:1},
+
+{q:"The registration fee prescribed for the Corporate Mitra Scheme course is:", options:["Rs.2,000 plus GST","Rs.2,500 plus GST","Rs.3,000 plus GST","Rs.3,500 plus GST"], answer:2},
+
+{q:"The Corporate Mitra Scheme provides a 50% concession in the course fee for women and candidates belonging to Himalayan Regions, Andaman and Nicobar Islands, and:", options:["Lakshadweep","Dadra and Nagar Haveli","Ladakh","Puducherry"], answer:0},
+
+{q:"Which of the following professional bodies is NOT listed as a key partner in the Corporate Mitra Scheme launched by the Ministry of Corporate Affairs (MCA)?", options:["Institute of Chartered Accountants of India (ICAI)","Institute of Company Secretaries of India (ICSI)","Institute of Cost Accountants of India (ICMAI)","Bar Council of India (BCI)"], answer:3},
+
+{q:"The Indian Institute of Technology (IIT) Madras, which recently partnered with the Ministry of Corporate Affairs (MCA), was established in:", options:["1957","1958","1959","1960"], answer:2},
+
+{q:"The Institute of Chartered Accountants of India (ICAI), one of the partner organisations under the Corporate Mitra Scheme, was established in:", options:["1947","1948","1949","1950"], answer:2},
+
+{q:"The Institute of Company Secretaries of India (ICSI) was established in:", options:["1966","1967","1968","1969"], answer:2},
+
+{q:"The Institute of Cost Accountants of India (ICMAI), also associated with the Corporate Mitra Scheme, has its headquarters located in:", options:["New Delhi","Mumbai","Kolkata","Chennai"], answer:2},
+
+{q:"According to the recent announcement under the Reserve Bank of India (RBI) norms, Kakinada Cooperative Town Bank attained Tier-III status after crossing which important financial milestone?", options:["Total business of Rs.2,000 crore","Deposits of Rs.2,000 crore","Advances of Rs.2,000 crore","Net worth of Rs.2,000 crore"], answer:1},
+
+{q:"With its recent achievement under RBI norms, Kakinada Cooperative Town Bank became:", options:["Andhra Pradesh's largest Urban Cooperative Bank","The second-largest among the 46 Urban Cooperative Banks (UCBs) in Andhra Pradesh","India's largest cooperative bank by deposits","The first Tier-IV Urban Cooperative Bank in Andhra Pradesh"], answer:1},
+
+{q:"One of the significant achievements reported by Kakinada Cooperative Town Bank along with attaining Tier-III status was maintaining:", options:["Zero Gross Non-Performing Assets (GNPA)","Zero Net Non-Performing Assets (NPA)","Capital Adequacy Ratio above 20%","Gross NPA below 1%"], answer:1},
+
+{q:"As per the Reserve Bank of India (RBI) classification norms referred to in the news, a Tier-III Urban Cooperative Bank (UCB) is one having deposits:", options:["Between Rs.500 crore and Rs.5,000 crore","Between Rs.1,000 crore and Rs.10,000 crore","Above Rs.2,000 crore only","Above Rs.10,000 crore"], answer:1},
+
+{q:"The abbreviation UCB, frequently appearing in banking current affairs, stands for:", options:["Unified Cooperative Bank","Urban Cooperative Bank","Universal Cooperative Bank","Union Cooperative Bank"], answer:1},
+
+{q:"The recent Tier-III classification of Kakinada Cooperative Town Bank has been made under the norms issued by:", options:["NABARD","Reserve Bank of India (RBI)","National Cooperative Development Corporation","Ministry of Cooperation"], answer:1},
+
+{q:"The Reserve Bank of India (RBI), under whose norms Urban Cooperative Banks are classified, was established on:", options:["1 April 1934","1 April 1935","1 January 1936","15 August 1947"], answer:1},
+
+{q:"The 61st U.S. Open Badminton Championship 2026 witnessed India's Kidambi Srikanth finishing as:", options:["Champion","Runner-up","Bronze medallist","Semi-finalist"], answer:1},
+
+{q:"Who won the men's singles title at the 2026 U.S. Open Badminton Championship, where India's Kidambi Srikanth finished runner-up?", options:["Loh Kean Yew","Anders Antonsen","Su Li-yang","Kodai Naraoka"], answer:2},
+
+{q:"Which player won the women's singles title at the 2026 U.S. Open Badminton Championship?", options:["Carolina Marin","Akane Yamaguchi","Line Christophersen","Busanan Ongbamrungphan"], answer:2},
+
+{q:"The 2026 U.S. Open Badminton Championship was the:", options:["58th edition","59th edition","60th edition","61st edition"], answer:3},
+
+{q:"The international governing body responsible for organising global badminton tournaments such as the U.S. Open Badminton Championship is:", options:["International Badminton Federation (IBF)","World Badminton Association (WBA)","Badminton World Federation (BWF)","World Shuttle Federation (WSF)"], answer:2},
+
+{q:"The Badminton World Federation (BWF), referred to in the recent U.S. Open Badminton news, has its headquarters at:", options:["Singapore","Kuala Lumpur, Malaysia","Jakarta, Indonesia","Bangkok, Thailand"], answer:1},
+
+{q:"At the 2026 Austrian Grand Prix, George Russell secured his:", options:["Sixth Formula One Grand Prix victory","Seventh Formula One Grand Prix victory","Eighth Formula One Grand Prix victory","Ninth Formula One Grand Prix victory"], answer:1},
+
+{q:"George Russell, winner of the 2026 Austrian Grand Prix, represents which Formula One team?", options:["Ferrari","Red Bull Racing","Mercedes-AMG Petronas Formula One Team","McLaren"], answer:2},
+
+{q:"The 2026 Austrian Grand Prix was held at:", options:["Silverstone Circuit","Circuit de Spa-Francorchamps","Red Bull Ring, Spielberg","Monza Circuit"], answer:2},
+
+{q:"Who finished second behind George Russell in the 2026 Austrian Grand Prix?", options:["Lewis Hamilton","Andrea Kimi Antonelli","Max Verstappen","Charles Leclerc"], answer:2},
+
+{q:"The Formula One World Championship, of which the Austrian Grand Prix is a part, is governed by:", options:["Fédération Internationale de Motocyclisme (FIM)","Fédération Internationale de l'Automobile (FIA)","International Olympic Committee (IOC)","World Motor Sport Federation (WMSF)"], answer:1},
+
+{q:"The Fédération Internationale de l'Automobile (FIA), the governing body of Formula One, was established in:", options:["1899","1902","1904","1908"], answer:2},
+
+{q:"The Indian Women's Cricket Team recently secured direct qualification for the Los Angeles 2028 Olympic Games after the conclusion of which tournament?", options:["ICC Women's Cricket World Cup","ICC Women's Champions Trophy","ICC Women's T20 World Cup","Women's Asia Cup"], answer:2},
+
+{q:"The Indian Women's Cricket Team secured direct qualification for the Los Angeles (LA) 2028 Olympic Games after the conclusion of the group stage of which tournament?", options:["ICC Women's ODI World Cup","ICC Women's T20 World Cup","Women's Asia Cup","ICC Women's Champions Trophy"], answer:1},
+
+{q:"According to the recent announcement by the International Cricket Council (ICC), the Indian Women's Cricket Team qualified for the Los Angeles 2028 Olympic Games as the representative from which continent?", options:["Europe","Asia","Oceania","Africa"], answer:1},
+
+{q:"Which of the following teams qualified from Oceania for the Los Angeles 2028 Olympic Games women's cricket competition?", options:["New Zealand","Australia","Papua New Guinea","Fiji"], answer:1},
+
+{q:"Which team secured qualification from Africa for the Los Angeles 2028 Olympic Games women's cricket competition?", options:["Zimbabwe","South Africa","Namibia","Kenya"], answer:1},
+
+{q:"Great Britain qualified for the Los Angeles 2028 Olympic Games women's cricket event and will be represented in ICC events by:", options:["Scotland","England","Wales","Northern Ireland"], answer:1},
+
+{q:"The cricket competition at the Los Angeles (LA) 2028 Olympic Games is scheduled to be held at:", options:["Los Angeles Memorial Coliseum","Pomona, California","Long Beach, California","Anaheim, California"], answer:1},
+
+{q:"The cricket competition at the Los Angeles (LA) 2028 Olympic Games is scheduled to be conducted during:", options:["1–15 July 2028","12–29 July 2028","15–31 August 2028","20 July–5 August 2028"], answer:1},
+
+{q:"National Statistics Day 2026 was observed across India on:", options:["28 June","29 June","30 June","1 July"], answer:1},
+
+{q:"National Statistics Day is observed every year to commemorate the birth anniversary of:", options:["C. Rangarajan","Prasanta Chandra (P.C.) Mahalanobis","V.K.R.V. Rao","M.G.K. Menon"], answer:1},
+
+{q:"The theme for National Statistics Day 2026 was:", options:["Data for Inclusive Development","Unlocking the Potential of Administrative Data","Statistics for Sustainable Growth","Digital Data for New India"], answer:1},
+
+{q:"National Statistics Day was first observed in India in:", options:["2005","2006","2007","2008"], answer:2},
+
+{q:"The primary objective of observing National Statistics Day is to:", options:["Promote financial inclusion","Highlight the importance of statistics in socio-economic development and policymaking","Celebrate achievements in Digital India","Encourage census participation"], answer:1},
+
+{q:"International Day of the Tropics 2026 was observed on:", options:["28 June","29 June","30 June","1 July"], answer:1},
+
+{q:"The International Day of the Tropics is observed to raise awareness about:", options:["Climate finance","Challenges and potential of tropical regions","Marine biodiversity","Desertification"], answer:1},
+
+{q:"The International Day of the Tropics was first observed in:", options:["2015","2016","2017","2018"], answer:2},
+
+{q:"The observance of the International Day of the Tropics on 29 June commemorates the launch of the inaugural State of the Tropics Report in 2014 at:", options:["Bangkok, Thailand","Yangon, Myanmar","Jakarta, Indonesia","Kuala Lumpur, Malaysia"], answer:1},
+
+{q:"International Asteroid Day (IAD) 2026 was observed on:", options:["29 June","30 June","1 July","2 July"], answer:1},
+
+{q:"International Asteroid Day (IAD) is observed under the initiative of which organisation?", options:["International Astronomical Union (IAU)","United Nations (UN)","European Space Agency (ESA)","National Aeronautics and Space Administration (NASA)"], answer:1},
+
+{q:"The primary objective of observing International Asteroid Day (IAD) is to:", options:["Promote commercial space exploration","Raise awareness about asteroid impact hazards and strengthen international cooperation for planetary defence","Celebrate discoveries of new planets","Encourage private satellite launches"], answer:1},
+
+{q:"International Asteroid Day (IAD) was first officially observed on:", options:["30 June 2015","30 June 2016","30 June 2017","30 June 2018"], answer:2},
+
+];
+
+
+// ===============================
+// VARIABLES
+// ===============================
+
+let userAnswers = new Array(questions.length).fill(null);
+
+let markedForReview = new Array(questions.length).fill(false);
+
+let submitted = false;
+
+// ===============================
+// LOAD QUIZ
+// ===============================
+
+function loadQuiz(){
+
+    const quizDiv = document.getElementById("quiz");
+
+    questions.forEach((question,index)=>{
+
+        const qDiv = document.createElement("div");
+
+        qDiv.classList.add("question");
+
+        qDiv.id = `question_${index}`;
+
+        qDiv.innerHTML = `
+        <h3>Q${index+1}. ${question.q}</h3>
+        `;
+
+        question.options.forEach((option,optIndex)=>{
+
+            const opt = document.createElement("div");
+
+            opt.classList.add("option");
+
+            opt.innerText = option;
+
+            opt.onclick = ()=>selectOption(index,optIndex,opt);
+
+            opt.id = `q${index}_opt${optIndex}`;
+
+            qDiv.appendChild(opt);
+
+        });
+
+        // MARK BUTTON
+
+        const markBtn = document.createElement("button");
+
+        markBtn.innerText = "Mark For Review";
+
+        markBtn.classList.add("mark-btn");
+
+        markBtn.onclick = ()=>toggleMark(index,markBtn);
+
+        qDiv.appendChild(markBtn);
+
+        // CLEAR BUTTON
+
+        const clearBtn = document.createElement("button");
+
+        clearBtn.innerText = "Clear";
+
+        clearBtn.classList.add("clear-btn");
+
+        clearBtn.onclick = ()=>clearAnswer(index);
+
+        qDiv.appendChild(clearBtn);
+
+        quizDiv.appendChild(qDiv);
+
+    });
+
+}
+
+// ===============================
+// SELECT OPTION
+// ===============================
+
+function selectOption(qIndex,optIndex,element){
+
+    if(submitted) return;
+
+    userAnswers[qIndex] = optIndex;
+
+    const options = document.querySelectorAll(`[id^="q${qIndex}_opt"]`);
+
+    options.forEach(opt=>{
+        opt.classList.remove("selected");
+    });
+
+    element.classList.add("selected");
+
+}
+
+// ===============================
+// MARK FOR REVIEW
+// ===============================
+
+function toggleMark(index,button){
+
+    markedForReview[index] = !markedForReview[index];
+
+    const questionBox = document.getElementById(`question_${index}`);
+
+    if(markedForReview[index]){
+
+        button.classList.add("marked");
+
+        button.innerText = "Marked For Review";
+
+        questionBox.classList.add("review-marked");
+
+    }else{
+
+        button.classList.remove("marked");
+
+        button.innerText = "Mark For Review";
+
+        questionBox.classList.remove("review-marked");
+
+    }
+
+}
+
+// ===============================
+// CLEAR ANSWER
+// ===============================
+
+function clearAnswer(index){
+
+    if(submitted) return;
+
+    userAnswers[index] = null;
+
+    const options = document.querySelectorAll(`[id^="q${index}_opt"]`);
+
+    options.forEach(opt=>{
+        opt.classList.remove("selected");
+    });
+
+}
+
+// ===============================
+// SUBMIT QUIZ
+// ===============================
+
+function submitQuiz(){
+
+    if(submitted) return;
+
+    submitted = true;
+
+    clearInterval(timer);
+
+    let score = 0;
+
+    let correctCount = 0;
+    let wrongCount = 0;
+    let unansweredCount = 0;
+
+    questions.forEach((question,index)=>{
+
+        const userAns = userAnswers[index];
+
+        if(userAns === null){
+
+            unansweredCount++;
+
+        }
+        else if(userAns === question.answer){
+
+            score += 1;
+            correctCount++;
+
+        }
+        else{
+
+            score -= 0.25;
+            wrongCount++;
+
+        }
+
+    });
+
+    let attempted = correctCount + wrongCount;
+
+    let accuracy = attempted > 0
+    ? ((correctCount/attempted)*100).toFixed(2)
+    : 0;
+
+    document.body.innerHTML = `
+
+    <div class="container">
+
+        <div class="result-box">
+
+            <h1>Quiz Submitted ✅</h1>
+
+            <h2>Total Score: ${score.toFixed(2)}</h2>
+
+            <h3>Correct Answers: ${correctCount}</h3>
+
+            <h3>Wrong Answers: ${wrongCount}</h3>
+
+            <h3>Unanswered Questions: ${unansweredCount}</h3>
+
+            <h3>Accuracy: ${accuracy}%</h3>
+
+            <button class="review-btn" onclick="reviewAnswers()">
+            Review Answers
+            </button>
+
+            <div id="reviewSection"></div>
+
+        </div>
+
+    </div>
+
+    `;
+
+}
+
+// ===============================
+// REVIEW ANSWERS
+// ===============================
+
+function reviewAnswers(){
+
+    const reviewSection = document.getElementById("reviewSection");
+
+    let html = `<h1 style="margin-top:40px;">Review Section</h1>`;
+
+    questions.forEach((question,index)=>{
+
+        const userAns = userAnswers[index];
+
+        let status = "";
+        let marks = "";
+
+        if(userAns === null){
+
+            status = `<span class="unanswered">Unanswered</span>`;
+            marks = `0 Marks`;
+
+        }
+        else if(userAns === question.answer){
+
+            status = `<span class="correct">Correct ✅</span>`;
+            marks = `+1 Mark`;
+
+        }
+        else{
+
+            status = `<span class="wrong">Wrong ❌</span>`;
+            marks = `-0.25 Mark`;
+
+        }
+
+        html += `
+
+        <div class="review-question">
+
+            <h3>Q${index+1}. ${question.q}</h3>
+
+            <p>${status}</p>
+
+            <p><b>Marks:</b> ${marks}</p>
+
+            <p>
+            <b>Your Answer:</b>
+            ${
+                userAns === null
+                ? "Not Attempted"
+                : question.options[userAns]
+            }
+            </p>
+
+            <div class="correct-answer">
+            <b>Correct Answer:</b>
+            ${question.options[question.answer]}
+            </div>
+
+        </div>
+
+        `;
+
+    });
+
+    reviewSection.innerHTML = html;
+
+}
+
+// ===============================
+// TIMER
+// ===============================
+
+let time = 2700;
+
+let timer;
+
+let isPaused = false;
+
+function startTimer(){
+
+    timer = setInterval(()=>{
+
+        if(!isPaused){
+
+            let minutes = Math.floor(time/60);
+
+            let seconds = time%60;
+
+            document.getElementById("timer").innerText =
+            `Time Left: ${minutes}:${seconds < 10 ? '0'+seconds : seconds}`;
+
+            time--;
+
+            if(time < 0){
+
+                clearInterval(timer);
+
+                alert("Time is up! Quiz auto-submitted.");
+
+                submitQuiz();
+
+            }
+
+        }
+
+    },1000);
+
+}
+
+// ===============================
+// PAUSE TIMER
+// ===============================
+
+function pauseTimer(){
+
+    if(submitted) return;
+
+    isPaused = true;
+
+    document.getElementById("pauseBtn").disabled = true;
+
+    document.getElementById("resumeBtn").disabled = false;
+
+    // Disable options
+    document.querySelectorAll(".option").forEach(opt=>{
+        opt.classList.add("disabled-option");
+    });
+
+    // Disable buttons
+    document.querySelectorAll(".mark-btn, .clear-btn").forEach(btn=>{
+        btn.disabled = true;
+        btn.classList.add("disabled-btn");
+    });
+
+}
+// ===============================
+// RESUME TIMER
+// ===============================
+
+function resumeTimer(){
+
+    if(submitted) return;
+
+    isPaused = false;
+
+    document.getElementById("pauseBtn").disabled = false;
+
+    document.getElementById("resumeBtn").disabled = true;
+
+    // Enable options
+    document.querySelectorAll(".option").forEach(opt=>{
+        opt.classList.remove("disabled-option");
+    });
+
+    // Enable buttons
+    document.querySelectorAll(".mark-btn, .clear-btn").forEach(btn=>{
+        btn.disabled = false;
+        btn.classList.remove("disabled-btn");
+    });
+
+}
+// ===============================
+
+loadQuiz();
+
+startTimer();
+
+</script>
+
+</body>
+</html>
